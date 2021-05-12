@@ -1,6 +1,10 @@
 import {
     Maze
 } from './MazeDfsStack.js'
+
+import {
+    bfsFindPath
+} from './MazeUtil.js'
 const CELL_WIDTH = 20;
 const LINE_WIDTH = 2;
 const HALF_WIDTH = 1;
@@ -34,6 +38,9 @@ class CanvasMaze {
         this.wrap = wrap;
         this.row = row;
         this.col = col;
+
+        this.matrix = [];
+        this.drawIng = true;
 
         this.canvas = undefined;
         this.ctx = undefined;
@@ -78,7 +85,7 @@ class CanvasMaze {
             ctx.stroke();
         }
         ctx.beginPath();
-        ctx.strokeStyle = 'red';
+        ctx.strokeStyle = 'skybule';
         ctx.setLineDash([]);
         for (let j = 0; j <= col; j++) {
             ctx.beginPath();
@@ -90,26 +97,23 @@ class CanvasMaze {
         this.clearWall();
 
     }
-    clearWallByArray(matrix, ctx) {
+    clearWallByArray(array, ctx) {
         //拆墙法
-        for (let i = 0; i < matrix.length; i++) {
-            for (let j = 0; j < matrix[0].length; j++) {
-                if (i % 2 === 1 && j % 2 === 1) {
-                    continue;
-                }
-                if (matrix[i][j] === 0) {
-                    //拆墙
-                    if (i % 2 === 1) {
-                        //拆纵向的墙
-                        ctx.clearRect(((j / 2) | 0) * CELL_WIDTH, ((i / 2) | 0) * CELL_WIDTH + LINE_WIDTH, LINE_WIDTH, CELL_WIDTH - LINE_WIDTH);
-                    } else {
-                        //拆横向的墙
-                        ctx.clearRect(((j / 2) | 0) * CELL_WIDTH + LINE_WIDTH, ((i / 2) | 0) * CELL_WIDTH, CELL_WIDTH - LINE_WIDTH, LINE_WIDTH);
-                    }
-
-                }
+        for (let {
+                x,
+                y
+            } of array) {
+            //拆墙
+            if (x % 2 === 1) {
+                //拆纵向的墙 
+                ctx.clearRect(((y / 2) | 0) * CELL_WIDTH, ((x / 2) | 0) * CELL_WIDTH + LINE_WIDTH, LINE_WIDTH, CELL_WIDTH - LINE_WIDTH);
+            } else {
+                //拆横向的墙
+                ctx.clearRect(((y / 2) | 0) * CELL_WIDTH + LINE_WIDTH, ((x / 2) | 0) * CELL_WIDTH, CELL_WIDTH - LINE_WIDTH, LINE_WIDTH);
             }
+
         }
+
     }
     clearWall() {
         const {
@@ -119,8 +123,7 @@ class CanvasMaze {
         } = this;
 
         let maze = new Maze(row, col);
-        let matrix = maze.getMatrix();
-        maze.dfsGenerate( async (i, j) => {
+        maze.dfsGenerate(async (i, j) => {
             return new Promise(resolve => {
                 setTimeout(() => {
                     if (i % 2 === 1) {
@@ -131,21 +134,71 @@ class CanvasMaze {
                         ctx.clearRect(((j / 2) | 0) * CELL_WIDTH + LINE_WIDTH, ((i / 2) | 0) * CELL_WIDTH, CELL_WIDTH - LINE_WIDTH, LINE_WIDTH);
                     }
                     resolve()
-                }, 16);
-              
+                }, 10);
+
             })
-           
+
+        }).then(data => {
+            console.log('绘制完成了:', data);
+            this.drawIng = false;
+            this.matrix = maze.getMatrix();
         })
 
     }
 
-    updateCanvas(matrix) {
+    drawPathLine() {
+        if (this.drawIng) return;
+        let {
+            ctx
+        } = this;
+        let path = bfsFindPath(this.matrix);
+        //绘制路线
+        console.log(11, path);
+        ctx.strokeStyle = 'red';
+        ctx.lineWidth = 1;
+
+        ctx.beginPath();
+        // ctx.moveTo(0,0);
+        // for (let {
+        //         x,
+        //         y
+        //     } of path) {
+        //     // (x-1) / 2  <==> 2 * ox + 1 = x;
+        //     let ox = (x / 2) | 0;
+        //     let oy = (y / 2) | 0;
+        //     ctx.lineTo((oy + 0.5) * CELL_WIDTH, (ox + 0.5) * CELL_WIDTH);
+        //     ctx.stroke();
+        // }
+        const len = path.length;
+        let startTime = undefined;
+        // const totalTime = 3000;
+        let count = 0;
+        const that = this;
+        function drawLine(timestamp) {
+            if (!startTime) {
+                startTime = timestamp;
+            }
+            if (count < len) {
+                let {
+                    x,
+                    y
+                } = path[count];
+                let ox = (x / 2) | 0;
+                let oy = (y / 2) | 0;
+                ctx.lineTo((oy + 0.5) * CELL_WIDTH, (ox + 0.5) * CELL_WIDTH);
+                ctx.stroke();
+                count++;
+                window.requestAnimationFrame(drawLine)
+            }else{
+                that.drawIng = false;
+            }
+
+        }
+        this.drawIng = true;
+        window.requestAnimationFrame(drawLine)
 
     }
-
-
-
-    initEvent() {
+    updateCanvas(matrix) {
 
     }
 

@@ -7,12 +7,19 @@
     <title>Document</title>
 </head>
 <body>
+    <div class="opt">
+        <button id="pathId">path</button>
+    </div>
 
 
     <script type="module">
         import {CanvasMaze} from './js/CanvasMaze.js';
-        let maze = new CanvasMaze(20,30);
-        maze.drawGird();
+        const canvasMaze = new CanvasMaze(20,30);
+        canvasMaze.drawGird();
+
+        document.getElementById('pathId').addEventListener('click',function (e) {
+            canvasMaze.drawPathLine();
+        })
 
     </script>
 </body>

@@ -62,6 +62,7 @@ class MazeDfs {
         visited[randomPoint] = 1;//访问过了
 
         let point = undefined; //当前单元格
+        let wallData = [];
         while(stack.length){
             //把点解析成坐标
             point = stack.pop()
@@ -77,7 +78,7 @@ class MazeDfs {
                 let originX = 2 * px + 1 + nextObj.x;
                 let originY = 2 * py + 1 + nextObj.y;
                 matrix[originX][originY] = 0;//打通墙
-
+                wallData.push({x: originX,y:originY});
                 //回调更新视图
                 typeof callback === 'function' && await callback.call(this,originX,originY);
 
@@ -87,8 +88,8 @@ class MazeDfs {
             }
 
         }
-
         //栈清空，生成完毕
+        return wallData;
         
     }
 
