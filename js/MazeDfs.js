@@ -14,30 +14,6 @@
 //现在假定入口和出口固定，左上角和右下角都为0
 
 import { bfsFindPath,randInt,DIRECT_OPT} from './MazeUtil.js'
-//取区域随机数x>=min && x<max
-function randInt(min, max) {
-	max = max || 0;
-	min = min || 0;
-	var step = Math.abs(max - min);
-	var st = (arguments.length < 2) ? 0 : min; //参数只有一个的时候，st = 0;
-	var result;
-	// result = st + (Math.ceil(Math.random() * step)) - 1;
-	result = st + ((Math.random() * step) | 0);
-	return result;
-}
-const DIRECT_OPT = [{
-	x: 1,
-	y: 0
-}, {
-	x: -1,
-	y: 0
-}, {
-	x: 0,
-	y: -1,
-}, {
-	x: 0,
-	y: 1,
-}]
 class Maze {
 	constructor(row, col) {
 		if (row < 1 || col < 1) {

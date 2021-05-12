@@ -5,6 +5,7 @@ import {
 	DrawMaze
 } from './CanvasDraw.js'
 
+
 const LEVEL_LISTS = [4, 7, 10]; //三关
 
 class MazeGame {
