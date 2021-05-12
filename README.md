@@ -1,2 +1,2 @@
-# MazeQuestion-
+# MazeQuestion
 MazeGenerationAlgorithm
