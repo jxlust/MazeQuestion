@@ -5,20 +5,40 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
+    <style>
+        .opt{
+            margin:  10px;
+            display: flex;
+        }
+    </style>
 </head>
 <body>
+
     <div class="opt">
         <button id="pathId">path</button>
+        <select name="selectType" id="selectId">
+            <option value="dfs">dfs</option>
+            <option value="kruskal">kruskal</option>
+            <option value="prim">prim</option>
+        </select>
     </div>
 
 
     <script type="module">
         import {CanvasMaze} from './js/CanvasMaze.js';
-        const canvasMaze = new CanvasMaze(20,30);
+        const selectDom = document.getElementById('selectId');
+        let type = selectDom.value;
+        const canvasMaze = new CanvasMaze(20,30,type);
         canvasMaze.drawGird();
 
         document.getElementById('pathId').addEventListener('click',function (e) {
             canvasMaze.drawPathLine();
+        })
+        selectDom.addEventListener('change',function (e) {
+            const value = e.target.value;
+            console.log('选择：',value);
+            canvasMaze.type = value;
+            canvasMaze.drawGird();
         })
 
     </script>

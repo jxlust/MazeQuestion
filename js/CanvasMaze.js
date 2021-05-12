@@ -1,6 +1,7 @@
 import {
     Maze
 } from './MazeDfsStack.js'
+import MazeKruskal from './MazeKruskal.js'
 
 import {
     bfsFindPath
@@ -8,6 +9,9 @@ import {
 const CELL_WIDTH = 20;
 const LINE_WIDTH = 2;
 const HALF_WIDTH = 1;
+const DFS_KEY = 'dfs';
+const PRIM_KEY = 'prim';
+const KRUSKAL_KEY = 'kruskal';
 
 //定义球体对象
 function Ball({
@@ -30,7 +34,7 @@ function Ball({
 }
 
 class CanvasMaze {
-    constructor(row, col, wrap) {
+    constructor(row, col, type = DFS_KEY, wrap) {
         if (row < 1 || col < 1) {
             throw new Error('The length is at least 1');
         }
@@ -38,9 +42,13 @@ class CanvasMaze {
         this.wrap = wrap;
         this.row = row;
         this.col = col;
+        this.type = type;
+
+        this.canvasWidth = this.col * CELL_WIDTH + (this.col + 1) * LINE_WIDTH;
+        this.canvasHeight = this.row * CELL_WIDTH + (this.row + 1) * LINE_WIDTH;
 
         this.matrix = [];
-        this.drawIng = true;
+        this.drawIng = false;
 
         this.canvas = undefined;
         this.ctx = undefined;
@@ -50,8 +58,8 @@ class CanvasMaze {
     initCanvas() {
         this.canvas = document.createElement('canvas');
         this.ctx = this.canvas.getContext('2d');
-        this.canvas.width = this.col * CELL_WIDTH + (this.col + 1) * LINE_WIDTH;
-        this.canvas.height = this.row * CELL_WIDTH + (this.row + 1) * LINE_WIDTH;
+        this.canvas.width = this.canvasWidth;
+        this.canvas.height = this.canvasHeight;
         if (!!this.wrap) {
             if (typeof this.wrap === 'string') {
                 let wrapDom = document.querySelector(this.wrap);
@@ -60,17 +68,22 @@ class CanvasMaze {
                 this.wrap.appendChild(this.canvas);
             }
         } else {
-            document.body.appendChild(this.canvas);
+            document.body.insertBefore(this.canvas, document.body.childNodes[0]);
         }
     }
 
     drawGird() {
+        if (this.drawIng) return;
         const {
             row,
             col,
-            ctx
+            ctx,
+            canvasWidth,
+            canvasHeight
         } = this;
 
+        //清空画板
+        ctx.clearRect(0, 0, canvasWidth, canvasHeight)
         // 设置虚线
         //  ctx.setLineDash([5,10])
         ctx.lineWidth = LINE_WIDTH;
@@ -111,19 +124,27 @@ class CanvasMaze {
                 //拆横向的墙
                 ctx.clearRect(((y / 2) | 0) * CELL_WIDTH + LINE_WIDTH, ((x / 2) | 0) * CELL_WIDTH, CELL_WIDTH - LINE_WIDTH, LINE_WIDTH);
             }
-
         }
 
     }
     clearWall() {
+        this.drawIng = true;
         const {
             row,
             col,
-            ctx
+            ctx,
+            type
         } = this;
-
-        let maze = new Maze(row, col);
-        maze.dfsGenerate(async (i, j) => {
+        let maze = undefined;
+        if (type === DFS_KEY) {
+            maze = new Maze(row, col);
+        } else if (type === KRUSKAL_KEY) {
+            maze = new MazeKruskal(row, col);
+        } else if (type === PRIM_KEY) {
+            
+        }
+       
+        maze.generate(async (i, j) => {
             return new Promise(resolve => {
                 setTimeout(() => {
                     if (i % 2 === 1) {
@@ -144,6 +165,32 @@ class CanvasMaze {
             this.matrix = maze.getMatrix();
         })
 
+    }
+
+    dfsGenerate(maze) {
+        const {
+            ctx
+        } = this;
+        maze.generate(async (i, j) => {
+            return new Promise(resolve => {
+                setTimeout(() => {
+                    if (i % 2 === 1) {
+                        //拆纵向的墙
+                        ctx.clearRect(((j / 2) | 0) * CELL_WIDTH, ((i / 2) | 0) * CELL_WIDTH + LINE_WIDTH, LINE_WIDTH, CELL_WIDTH - LINE_WIDTH);
+                    } else {
+                        //拆横向的墙
+                        ctx.clearRect(((j / 2) | 0) * CELL_WIDTH + LINE_WIDTH, ((i / 2) | 0) * CELL_WIDTH, CELL_WIDTH - LINE_WIDTH, LINE_WIDTH);
+                    }
+                    resolve()
+                }, 10);
+
+            })
+
+        }).then(data => {
+            console.log('绘制完成了:', data);
+            this.drawIng = false;
+            this.matrix = maze.getMatrix();
+        })
     }
 
     drawPathLine() {
@@ -174,6 +221,7 @@ class CanvasMaze {
         // const totalTime = 3000;
         let count = 0;
         const that = this;
+
         function drawLine(timestamp) {
             if (!startTime) {
                 startTime = timestamp;
@@ -189,7 +237,7 @@ class CanvasMaze {
                 ctx.stroke();
                 count++;
                 window.requestAnimationFrame(drawLine)
-            }else{
+            } else {
                 that.drawIng = false;
             }
 

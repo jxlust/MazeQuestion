@@ -49,7 +49,7 @@ class MazeDfs {
 //         3. 删除当前单元格和所选单元格之间的墙
 //         4. 将所选单元格标记为已访问并将其推入堆栈
 
-   async dfsGenerate(callback){
+   async generate(callback){
         let {matrix,row,col,mRow,mCol} = this;
         let count = row * col;
 
