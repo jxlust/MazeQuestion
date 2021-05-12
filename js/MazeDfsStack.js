@@ -16,7 +16,6 @@ class MazeDfs {
         this.path = [];
         this.createMatrix();
 
-        this.dfsGenerate();
 
     }
     createMatrix() {
@@ -50,7 +49,7 @@ class MazeDfs {
 //         3. 删除当前单元格和所选单元格之间的墙
 //         4. 将所选单元格标记为已访问并将其推入堆栈
 
-    dfsGenerate(){
+   async dfsGenerate(callback){
         let {matrix,row,col,mRow,mCol} = this;
         let count = row * col;
 
@@ -78,6 +77,10 @@ class MazeDfs {
                 let originX = 2 * px + 1 + nextObj.x;
                 let originY = 2 * py + 1 + nextObj.y;
                 matrix[originX][originY] = 0;//打通墙
+
+                //回调更新视图
+                typeof callback === 'function' && await callback.call(this,originX,originY);
+
                 visited[nextObj.nextP] = 1;//已访问
 
                 stack.push(nextObj.nextP);
