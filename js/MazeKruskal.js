@@ -1,6 +1,4 @@
 import {
-    bfsFindPath,
-    randInt,
     shuffleArray,
     DIRECT_TWO
 } from './MazeUtil.js'

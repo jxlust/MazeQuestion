@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>迷宫生成--格子版</title>
 
     <style>
         .table {
@@ -57,13 +57,14 @@
 
 
     <script type="module">
-        import {Maze} from './MazeDfs.js';
+        import {Maze} from './js/MazeRandom.js';
         let mz;
         const table = document.getElementById('table');
         let rafAniId;
 
         function initView(row = 8, col = 8) {
             mz = new Maze(row, col);
+            mz.generate();
             let matrix = mz.getMatrix();
             let str = ``;
             for (let i = 0; i < matrix.length; i++) {
