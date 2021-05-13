@@ -82,7 +82,9 @@ class CanvasMaze {
 
     this.clearWall();
   }
-  clearWallByArray(array, ctx) {
+  clearWallByArray(array) {
+    const { ctx } = this;
+    this.drawIng = false;
     //拆墙法
     for (let { x, y } of array) {
       //拆墙
@@ -163,7 +165,8 @@ class CanvasMaze {
     this.drawIng = true;
     let data = maze.generate();
     this.matrix = maze.getMatrix();
-    this.clearAnimation(data);
+    // this.clearAnimation(data);
+    this.clearWallByArray(data);
   }
   kruskalGenerate(maze) {
     this.drawIng = true;
