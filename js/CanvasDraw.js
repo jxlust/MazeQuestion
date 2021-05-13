@@ -137,8 +137,8 @@ class DrawMaze {
 			});
 
 			ctx.save(); //保存坐原点平移之前的状态
-			// ball.draw(ctx);
-			ball.drawImg(ctx)
+			ball.draw(ctx);
+			// ball.drawImg(ctx)
 			const keyupEvent = function (event) {
 				let keycode = event.keyCode || event.which || event.charCode;
 				let keyStr = event.key;
@@ -177,8 +177,8 @@ class DrawMaze {
 					//清楚起点，以及矩形的宽高
 					ctx.clearRect(oldy, oldx, CELL_WIDTH, CELL_WIDTH);
 					// ctx.translate(translatePoint[0], translatePoint[1]);
-					// ball.draw(ctx);
-					ball.drawImg(ctx)
+					ball.draw(ctx);
+					// ball.drawImg(ctx)
 
 					//更新当前位置
 					currentPoint.x = x;
