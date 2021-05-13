@@ -76,6 +76,10 @@ class Maze {
     visited.push(point);
     pointsStatus[point] = 1;
     const wallData = [];
+
+		const randomSet = new Set();
+		randomSet.add(point);
+
     while (visited.length < count) {
       //解析成坐标
       let px = (point / col) | 0;
@@ -93,13 +97,19 @@ class Maze {
         wallData.push({ x: originX, y: originY });
 
         point = nextPointObj.newp;
+
+				randomSet.add(point);
         pointsStatus[point] = 1;
         visited.push(point);
       } else {
         //四个方向都不符合要求了，再随机取一个点
         //注意：从以访问过的点随机取一点，保证连通性
-        let notIndex = randInt(0, visited.length);
-        point = visited[notIndex];
+				//TODO: 这里可以优化，如果四个方向都符合要求，就剔除这个点，从剩下符合的数据里做选择
+				randomSet.delete(point);
+				let array = [...randomSet];
+        let notIndex = randInt(0, randomSet.size);
+				// let notIndex = randInt(0, visited.length);
+        point = array[notIndex];
       }
     }
     return wallData;

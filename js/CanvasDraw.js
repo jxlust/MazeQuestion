@@ -1,10 +1,11 @@
-const CELL_WIDTH = 40;
-
+const CELL_WIDTH = 20;
+const HALF_CELL = 10;
+const BALL_RADIUS = 8;
 //定义球体对象
 function Ball({
-	x = 20,
-	y = 20,
-	radius = 12
+	x = HALF_CELL,
+	y = HALF_CELL,
+	radius = BALL_RADIUS
 } = {}) {
 	this.x = x;
 	this.y = y;
@@ -17,6 +18,17 @@ function Ball({
 		ctx.closePath();
 		ctx.fillStyle = this.color;
 		ctx.fill();
+	}
+	this.drawImg = function (ctx) {
+		let img = new Image();
+		let x = this.x;
+		let y = this.y;
+		img.src = './img/sun1.gif';
+		img.onload = function () {
+			console.log(11,x,y);
+			ctx.drawImage(img,x-10,y-10,20,20);
+		}
+		
 	}
 
 }
@@ -103,12 +115,13 @@ class DrawMaze {
 
 			const currentPoint = {
 				x: 1,
-				y: 1,
+				y: 0,
 			}
+
 			// const translatePoint = [0,0]
 			const endPoint = {
 				x: row - 2,
-				y: col - 2
+				y: col - 1
 			}
 			//绘制出口
 			ctx.save();
@@ -119,16 +132,17 @@ class DrawMaze {
 
 			//绘制起始点
 			let ball = new Ball({
-				x: 1.5 * CELL_WIDTH,
+				x: 0.5 * CELL_WIDTH,
 				y: 1.5 * CELL_WIDTH
 			});
 
 			ctx.save(); //保存坐原点平移之前的状态
-			ball.draw(ctx);
+			// ball.draw(ctx);
+			ball.drawImg(ctx)
 			const keyupEvent = function (event) {
 				let keycode = event.keyCode || event.which || event.charCode;
 				let keyStr = event.key;
-				console.log(111,event,event.key, event.keyCode);
+				// console.log(111,event,event.key, event.keyCode);
 				let {
 					x,
 					y
@@ -163,7 +177,8 @@ class DrawMaze {
 					//清楚起点，以及矩形的宽高
 					ctx.clearRect(oldy, oldx, CELL_WIDTH, CELL_WIDTH);
 					// ctx.translate(translatePoint[0], translatePoint[1]);
-					ball.draw(ctx);
+					// ball.draw(ctx);
+					ball.drawImg(ctx)
 
 					//更新当前位置
 					currentPoint.x = x;

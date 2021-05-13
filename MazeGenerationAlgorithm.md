@@ -56,14 +56,22 @@
 ### 3.随机普里姆算法
 使用Prim's算法生成30 x 20迷宫的动画。
 该算法是Prim算法的随机版本。
+1. Start with a grid full of walls.
+2. Pick a cell, mark it as part of the maze. Add the walls of the cell to the wall list.
+3. While there are walls in the list:
+	1. Pick a random wall from the list. If only one of the two cells that the wall divides is visited, then:
+		2. Make the wall a passage and mark the unvisited cell as part of the maze.
+		3. Add the neighboring walls of the cell to the wall list.
+	2. Remove the wall from the list.
+ 
+1. 让迷宫全是墙.
+2. 选一个单元格作为迷宫的通路，然后把它的邻墙放入列表
+3. 当列表里还有墙时
+	1. 从列表里随机选一个墙，如果这面墙分隔的两个单元格只有一个单元格被访问过
+		1. 那就从列表里移除这面墙，即把墙打通，让未访问的单元格成为迷宫的通路
+		2. 把这个格子的墙加入列表
+	2. 如果墙两面的单元格都已经被访问过，那就从列表里移除这面墙
 
-1. 从充满墙壁的网格开始。
-2. 选择一个单元格，将其标记为迷宫的一部分。将单元格的墙添加到墙列表中。
-3. 虽然列表中有墙：
-    1. 从列表中选择一个随机的墙。如果仅访问墙划分的两个单元之一，则：
-        1. 使墙壁成为通道，并将未访问的单元标记为迷宫的一部分。
-        2. 将单元格的相邻墙添加到墙列表中。
-    2. 从列表中删除墙。
 
 请注意，在具有随机边缘权重的图形上简单运行经典Prim's会产生与Kruskal风格上完全相同的迷宫，因为它们都是最小的生成树算法。相反，此算法引入了样式变化，因为更接近起点的边缘具有较低的有效权重。
 
