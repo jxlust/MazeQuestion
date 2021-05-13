@@ -41,7 +41,7 @@ class MazePrim{
             }
         }
     }
-    
+
 }
 
 export default MazePrim;
