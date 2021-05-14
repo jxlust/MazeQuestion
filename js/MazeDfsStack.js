@@ -1,4 +1,4 @@
-import { bfsFindPath,randInt,DIRECT_OPT} from './MazeUtil.js'
+import { bfsFindPath,randomNumber,DIRECT_OPT} from './MazeUtil.js'
 class MazeDfs {
     constructor(row, col) {
         if (row < 1 || col < 1) {
@@ -57,7 +57,7 @@ class MazeDfs {
         let visited = new Array(count).fill(0);
         let stack = [];
 
-        let randomPoint =  (Math.random() * count) | 0;
+        let randomPoint =  randomNumber(count);
         stack.push(randomPoint);
         visited[randomPoint] = 1;//访问过了
 
@@ -111,7 +111,7 @@ class MazeDfs {
             }
         }
         if(around.length){
-            let rIndex = (around.length * Math.random()) | 0;
+            let rIndex =  randomNumber(around.length);
             return around[rIndex]
         }
         return null;

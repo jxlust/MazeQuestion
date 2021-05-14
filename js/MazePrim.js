@@ -1,4 +1,4 @@
-import { DIRECT_OPT, randInt } from "./MazeUtil.js";
+import { DIRECT_OPT, randomNumber } from "./MazeUtil.js";
 
 //图的邻接矩阵{G,V};
 //图G的顶点v0,v1,... v(row*col-1);
@@ -57,12 +57,12 @@ class MazePrim {
     const pStatus = new Array(totalCount).fill(0);
     const visited = [];
 
-    let point = Math.random() * totalCount | 0;
+    let point = randomNumber(totalCount);
     visited.push(point);
     pStatus[point] = 1;
 
     while (visited.length < totalCount) {
-      let rIndex = (Math.random() * visited.length) | 0;
+      let rIndex = randomNumber(visited.length);
       let p = visited[rIndex];
 
       let px = (p / col) | 0;
@@ -110,7 +110,7 @@ class MazePrim {
       }
     }
     if (p.length) {
-      let index = (Math.random() * p.length) | 0;
+      let index = randomNumber(p.length);
       return p[index];
     } else {
       return null;

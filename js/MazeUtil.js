@@ -71,6 +71,9 @@
      result = st + ((Math.random() * step) | 0);
      return result;
  }
+ function randomNumber(n) {
+     return n * Math.random() | 0;
+ }
 
  //打散数组，随机化
  function shuffleArray(array) {
@@ -108,5 +111,6 @@
      randInt,
      DIRECT_OPT,
      DIRECT_TWO,
+     randomNumber,
      shuffleArray
  }

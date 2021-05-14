@@ -19,7 +19,7 @@
 //需要初始化一些通路点，来随机生成一条生成树
 //现在假定入口和出口固定，左上角和右下角都为0
 
-import { bfsFindPath, randInt, DIRECT_OPT } from "./MazeUtil.js";
+import { bfsFindPath, randomNumber, DIRECT_OPT } from "./MazeUtil.js";
 class Maze {
   constructor(row, col) {
     if (row < 1 || col < 1) {
@@ -74,7 +74,7 @@ class Maze {
     }
     let visited = [];
     //随机取一个点,开始生成树
-    let point = (Math.random() * count) | 0;
+    let point = randomNumber(count);
     visited.push(point);
     pointsStatus[point] = 1;
     const wallData = [];
@@ -108,7 +108,7 @@ class Maze {
         // randomSet.delete(point);
         // let array = [...randomSet];
         // let notIndex = randInt(0, randomSet.size);
-        let notIndex = randInt(0, visited.length);
+        let notIndex = randomNumber(visited.length);
         point = visited[notIndex];
       }
     }
@@ -139,7 +139,7 @@ class Maze {
       }
     }
     if (p.length) {
-      let index = randInt(0, p.length);
+      let index = randomNumber(p.length);
       return p[index];
     } else {
       return null;
