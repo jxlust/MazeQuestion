@@ -29,7 +29,7 @@
         import {CanvasMaze} from './js/CanvasMaze.js';
         const selectDom = document.getElementById('selectId');
         let type = selectDom.value;
-        const canvasMaze = new CanvasMaze(50,50,type);
+        const canvasMaze = new CanvasMaze(10,10,type);
         canvasMaze.drawGird();
 
         document.getElementById('pathId').addEventListener('click',function (e) {
